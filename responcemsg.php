@@ -54,9 +54,9 @@ class ResponceMsg
             case "CLICK":
                 switch ($object->EventKey)
                 {
-                    case "Tel":
+                    case "ServeIn":
                         $content = array();
-                        $content[] = array("Title"=>"技术支持部", "Description"=>"", "PicUrl"=>"http://discuz.comli.com/weixin/weather/icon/cartoon.jpg", "Url" =>"http://m.cnblogs.com/?u=txw1958");
+                        $content[] = array("Title"=>"技术支持部", "Description"=>"这是一个测试", "PicUrl"=>"http://j3mkit.natappfree.cc/res/timg.jpg", "Url" =>"http://doc.i5cnc.com/");
                         break;
                     default:
                         $content = "点击菜单：".$object->EventKey;
@@ -129,7 +129,40 @@ class ResponceMsg
         </xml>";
         $sRespData = sprintf($xmlTpl, $object->FromUserName, $object->ToUserName, time(), $content);
         $sEncryptMsg = "";
-        $wxcpt = new WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->corpId);
+        //$wxcpt = new WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->corpId);
+        $errCode = $wxcpt->EncryptMsg($sRespData, $sReqTimeStamp, $sReqNonce, $sEncryptMsg);
+        echo $sEncryptMsg;
+        return $result;
+    }
+    //回复图文消息
+    private function transmitNews($object, $newsArray)
+    {
+        if(!is_array($newsArray)){
+            return "";
+        }
+        $itemTpl = "        <item>
+            <Title><![CDATA[%s]]></Title>
+            <Description><![CDATA[%s]]></Description>
+            <PicUrl><![CDATA[%s]]></PicUrl>
+            <Url><![CDATA[%s]]></Url>
+        </item>
+        ";
+        $item_str = "";
+        foreach ($newsArray as $item){
+            $item_str .= sprintf($itemTpl, $item['Title'], $item['Description'], $item['PicUrl'], $item['Url']);
+        }
+        $sEncryptMsg = "";
+        //$wxcpt = new WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->corpId);
+        $xmlTpl = "<xml>
+        <ToUserName><![CDATA[%s]]></ToUserName>
+        <FromUserName><![CDATA[%s]]></FromUserName>
+        <CreateTime>%s</CreateTime>
+        <MsgType><![CDATA[news]]></MsgType>
+        <ArticleCount>%s</ArticleCount>
+        <Articles>
+        $item_str    </Articles>
+        </xml>";
+        $sRespData= sprintf($xmlTpl, $object->FromUserName, $object->ToUserName, time(), count($newsArray));
         $errCode = $wxcpt->EncryptMsg($sRespData, $sReqTimeStamp, $sReqNonce, $sEncryptMsg);
         echo $sEncryptMsg;
         return $result;

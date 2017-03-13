@@ -12,9 +12,9 @@ if ( $NeedUrl != "")
 }
 else 
 {
-	$CREMENU=new CreatMenu();
-    $result_menu=$CREMENU->_GetMenu();
-    echo $result_menu;
+	//$CREMENU=new CreatMenu();
+    //$result_menu=$CREMENU->_GetMenu();
+    //echo $result_menu;
 	$RESMSG=new ResponceMsg();
     $MSG_RESULT=$RESMSG->_GetMsg();
     echo $MSG_RESULT;	
