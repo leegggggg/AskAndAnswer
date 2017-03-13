@@ -5,8 +5,8 @@ class AccessToken
 	//private $_token;
 	public function _GetToken()
 	{ 
-		$appid = "wxf39202c972c987ec";
-        $appsecret = "5X0o47_KS2RrzusyGDi9Kpkn5qFX9XbrktO-tIT9_nOIYWX5fTLY3VFq8Auc2_ux";
+		$appid = "wxcd016c6dcaa0690a";
+        $appsecret = "IQZV6bN2RoWjtrFRruXJteWJTsQ8KNUlQQP683pAwYZSGoXuXHQyjK5FnVpCd928";
 		$url ="https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={$appid}&corpsecret={$appsecret}";
 		//error_log($url,3,"E:\wamp\www\log.txt");
 		$ch = curl_init();	

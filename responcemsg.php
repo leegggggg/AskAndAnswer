@@ -4,7 +4,7 @@ class ResponceMsg
 {
 	private $encodingAesKey = "GFAUkhjsjq1DdbBAK4ynSOqbahqVN4LKvS9V7LVmOIQ";  
 	private $token = "i5cnctech";  
-	private $corpId = "wxf39202c972c987ec"; 
+	private $corpId = "wxcd016c6dcaa0690a"; 
 	public function _GetMsg()
 	{
 		$wxcpt = new WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->corpId); 
@@ -41,6 +41,7 @@ class ResponceMsg
 	private function receiveEvent($object)
     {
         $content = "";
+        error_log($object->Event,3,"E:\wamp\www\log.txt");
         switch ($object->Event)
         {
             case "subscribe":
@@ -51,9 +52,9 @@ class ResponceMsg
             case "unsubscribe":
                 $content = "取消关注";
                 break;
-            case "CLICK":
+            case "click":
                 switch ($object->EventKey)
-                {
+                {              	
                     case "ServeIn":
                         $content = array();
                         $content[] = array("Title"=>"技术支持部", "Description"=>"这是一个测试", "PicUrl"=>"http://j3mkit.natappfree.cc/res/timg.jpg", "Url" =>"http://doc.i5cnc.com/");
@@ -108,6 +109,7 @@ class ResponceMsg
 
         if(is_array($content)){
             $result = $this->transmitNews($object, $content);
+            error_log("进入推送",3,"E:\wamp\www\log.txt");
         }else{
             $result = $this->transmitText($object, $content);
         }
@@ -129,7 +131,7 @@ class ResponceMsg
         </xml>";
         $sRespData = sprintf($xmlTpl, $object->FromUserName, $object->ToUserName, time(), $content);
         $sEncryptMsg = "";
-        //$wxcpt = new WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->corpId);
+        $wxcpt = new WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->corpId);
         $errCode = $wxcpt->EncryptMsg($sRespData, $sReqTimeStamp, $sReqNonce, $sEncryptMsg);
         echo $sEncryptMsg;
         return $result;
@@ -140,7 +142,7 @@ class ResponceMsg
         if(!is_array($newsArray)){
             return "";
         }
-        $itemTpl = "        <item>
+        $itemTpl = "<item>
             <Title><![CDATA[%s]]></Title>
             <Description><![CDATA[%s]]></Description>
             <PicUrl><![CDATA[%s]]></PicUrl>
@@ -152,7 +154,7 @@ class ResponceMsg
             $item_str .= sprintf($itemTpl, $item['Title'], $item['Description'], $item['PicUrl'], $item['Url']);
         }
         $sEncryptMsg = "";
-        //$wxcpt = new WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->corpId);
+        $wxcpt = new WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->corpId);
         $xmlTpl = "<xml>
         <ToUserName><![CDATA[%s]]></ToUserName>
         <FromUserName><![CDATA[%s]]></FromUserName>
@@ -163,6 +165,7 @@ class ResponceMsg
         $item_str    </Articles>
         </xml>";
         $sRespData= sprintf($xmlTpl, $object->FromUserName, $object->ToUserName, time(), count($newsArray));
+        error_log($sReqTimeStamp,3,"E:\wamp\www\log.txt");
         $errCode = $wxcpt->EncryptMsg($sRespData, $sReqTimeStamp, $sReqNonce, $sEncryptMsg);
         echo $sEncryptMsg;
         return $result;

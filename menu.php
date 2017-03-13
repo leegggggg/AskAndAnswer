@@ -7,7 +7,7 @@ class CreatMenu
 	{
 		$GetAccess=new AccessToken();
 		$access_token=$GetAccess->_GetToken();
-		$AppID="41";
+		$AppID="73";
 		$url="https://qyapi.weixin.qq.com/cgi-bin/menu/create?access_token={$access_token}&agentid={$AppID}";
 		error_log($url,3,"E:\wamp\www\log.txt");
 		$CreMenu['button']['0']['name'] = '扫一扫';

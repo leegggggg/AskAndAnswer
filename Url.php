@@ -6,7 +6,7 @@ class ResponseUrl
 {
 	private $encodingAesKey = "GFAUkhjsjq1DdbBAK4ynSOqbahqVN4LKvS9V7LVmOIQ";  
 	private $token = "i5cnctech";  
-	private $corpId = "wxf39202c972c987ec"; 
+	private $corpId = "wxcd016c6dcaa0690a"; 
 	private $sVerifyNonce;
 	private $sVerifyMsgSig;
 	private $sVerifyTimeStamp;
