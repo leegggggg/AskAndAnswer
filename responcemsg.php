@@ -1,10 +1,11 @@
 <?php
 include_once "WXBizMsgCrypt.php";
+include_once 'searerrcode.php';
 class ResponceMsg
 {
 	private $encodingAesKey = "GFAUkhjsjq1DdbBAK4ynSOqbahqVN4LKvS9V7LVmOIQ";  
 	private $token = "i5cnctech";  
-	private $corpId = "wxcd016c6dcaa0690a"; 
+	private $corpId = "wxcd016c6dcaa0690a";
 	public function _GetMsg()
 	{
 		$wxcpt = new WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->corpId); 
@@ -41,7 +42,7 @@ class ResponceMsg
 	private function receiveEvent($object)
     {
         $content = "";
-        error_log($object->Event,3,"E:\wamp\www\log.txt");
+        //error_log($object->Event,3,"E:\wamp\www\log.txt");
         switch ($object->Event)
         {
             case "subscribe":
@@ -71,11 +72,14 @@ class ResponceMsg
                 $content = "扫描场景 ".$object->EventKey;
                 break;
             case "LOCATION":
-                $content = "上传位置：纬度 ".$object->Latitude.";经度 ".$object->Longitude;
+                //$content = "上传位置：纬度 ".$object->Latitude.";经度 ".$object->Longitude;
                 break;
             case "scancode_waitmsg":
                 if ($object->ScanCodeInfo->ScanType == "qrcode"){
-                    $content = "扫码带提示：类型 二维码 结果：".$object->ScanCodeInfo->ScanResult;
+                	$SearErr = new searcherrcode();
+                	$ErrResult = $SearErr->SearErrCode($object->ScanCodeInfo->ScanResult);
+                    //$content = "扫码带提示：类型 二维码 结果：".$object->ScanCodeInfo->ScanResult;
+                    $content = "扫码带提示：类型 二维码 结果：".$ErrResult;
                 }else if ($object->ScanCodeInfo->ScanType == "barcode"){
                     $codeinfo = explode(",",strval($object->ScanCodeInfo->ScanResult));
                     $codeValue = $codeinfo[1];
@@ -109,7 +113,7 @@ class ResponceMsg
 
         if(is_array($content)){
             $result = $this->transmitNews($object, $content);
-            error_log("进入推送",3,"E:\wamp\www\log.txt");
+            //error_log("进入推送",3,"E:\wamp\www\log.txt");
         }else{
             $result = $this->transmitText($object, $content);
         }
@@ -133,8 +137,8 @@ class ResponceMsg
         $sEncryptMsg = "";
         $wxcpt = new WXBizMsgCrypt($this->token, $this->encodingAesKey, $this->corpId);
         $errCode = $wxcpt->EncryptMsg($sRespData, $sReqTimeStamp, $sReqNonce, $sEncryptMsg);
-        echo $sEncryptMsg;
-        return $result;
+        //echo $sEncryptMsg;
+        return $sEncryptMsg;
     }
     //回复图文消息
     private function transmitNews($object, $newsArray)
@@ -165,9 +169,9 @@ class ResponceMsg
         $item_str    </Articles>
         </xml>";
         $sRespData= sprintf($xmlTpl, $object->FromUserName, $object->ToUserName, time(), count($newsArray));
-        error_log($sReqTimeStamp,3,"E:\wamp\www\log.txt");
-        $errCode = $wxcpt->EncryptMsg($sRespData, $sReqTimeStamp, $sReqNonce, $sEncryptMsg);
-        echo $sEncryptMsg;
-        return $result;
+        error_log($_GET['timestamp'],3,"E:\wamp\www\log.txt");
+        $errCode = $wxcpt->EncryptMsg($sRespData, $_GET['timestamp'], $_GET['nonce'], $sEncryptMsg);
+        //echo $sEncryptMsg;
+        return $sEncryptMsg;
     }
 }

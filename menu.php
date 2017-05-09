@@ -9,7 +9,7 @@ class CreatMenu
 		$access_token=$GetAccess->_GetToken();
 		$AppID="73";
 		$url="https://qyapi.weixin.qq.com/cgi-bin/menu/create?access_token={$access_token}&agentid={$AppID}";
-		error_log($url,3,"E:\wamp\www\log.txt");
+		//error_log($url,3,"E:\wamp\www\log.txt");
 		$CreMenu['button']['0']['name'] = '扫一扫';
 		$CreMenu['button']['0']['type'] = 'scancode_waitmsg';
 		$CreMenu['button']['0']['key'] = 'RepairOnline';
